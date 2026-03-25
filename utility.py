@@ -35,8 +35,6 @@ def dist(x, y):
     dist = np.sum(np.abs(x - y)**2)
     return dist
 def dtw_cost(sequence1, sequence2):
-    assert(sequence1)
-    assert(sequence2)
     w, h = sequence1.shape[0], sequence2.shape[0]
     D = np.zeros((w + 1, h + 1))
     D[0, 1:] = np.inf
