@@ -7,7 +7,7 @@ def hz2mel(hz):
 def mel2hz(mel):
     return 700 * (10**(mel / 2595) - 1)
 
-def mel_bank(num_mel=12, n_fft=512, sr=16000):
+def mel_bank(num_mel=26, n_fft=512, sr=16000):
     fmin, fmax = 0, sr/2
     mel_points = np.linspace(hz2mel(fmin), hz2mel(fmax), num_mel + 2)
     hz_points = mel2hz(mel_points)
@@ -30,6 +30,26 @@ def dct_matrix(num_mel=12, mfcc_out=12):
             D[m, n] = np.cos(n * np.pi * (m + 0.5) / num_mel)
     return D
 
+
+# cepstral mean and variance normalization
+def CMVN(mfcc):
+    mean = np.mean(mfcc, axis=0)
+    std = np.std(mfcc, axis=0)
+    mfcc_norm = (mfcc - mean) / (std + 1e-8)
+    return mfcc_norm
+
+def compute_delta(mfcc, N=2):
+    num_frames = mfcc.shape[0]
+    denominator = 2 * sum([n**2 for n in range(1, N+1)])
+    delta = np.zeros_like(mfcc)
+    for t in range(num_frames):
+        numerator = np.zeros(mfcc.shape[1])
+        for n in range(1, N+1):
+            t_plus = min(t+n, num_frames-1)
+            t_minus = max(t-n, 0)
+            numerator += n * (mfcc[t_plus] - mfcc[t_minus])
+        delta[t] = numerator / denominator
+    return delta
 # dtw
 def dist(x, y):
     dist = np.sum(np.abs(x - y)**2)
