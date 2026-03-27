@@ -14,4 +14,4 @@ DTW has poor generalization ability based on empirical results.
 Thus I've turned to HMM model and Viterbi algorithm.  
 HMM is in the range of machine learning, which is a data based model, can be generalizable with some more data.  
 Still MFCC is needed as a way of feature extraction.  
-HMM is here. 
+HMM is [here] (https://github.com/ssshion223/HMMViterbiForSpeech).  
